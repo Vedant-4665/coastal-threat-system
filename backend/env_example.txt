@@ -1,0 +1,15 @@
+# API Keys
+OPENWEATHER_API_KEY=your_openweather_api_key_here
+NOAA_API_KEY=your_noaa_api_key_here
+
+# Firebase Configuration
+FIREBASE_CREDENTIALS_PATH=path/to/your/firebase-service-account.json
+FIREBASE_PROJECT_ID=your_firebase_project_id
+
+# Database
+DATABASE_URL=sqlite:///./coastal_threats.db
+
+# Alert Settings
+ALERT_THRESHOLD_WIND_SPEED=25.0
+ALERT_THRESHOLD_TIDE_HEIGHT=2.5
+ALERT_THRESHOLD_PRESSURE=1000.0

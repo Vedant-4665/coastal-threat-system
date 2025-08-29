@@ -1,0 +1,451 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Import Inter font for professional typography */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* Base styles */
+* {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  @apply bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Professional Card Components */
+.pro-card {
+  @apply bg-white backdrop-blur-sm rounded-2xl shadow-xl border border-white border-opacity-20;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.pro-card-hover {
+  @apply transition-all duration-300 hover:shadow-2xl hover:scale-[1.02] hover:border-blue-200;
+}
+
+/* Header Styles */
+.header-gradient {
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1e40af 100%);
+  box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
+}
+
+/* Navigation Styles */
+.nav-item {
+  @apply flex items-center px-4 py-3 text-gray-300 hover:text-white hover:bg-white hover:bg-opacity-10 rounded-xl transition-all duration-200 font-medium;
+}
+
+.nav-item.active {
+  @apply bg-white bg-opacity-20 text-white shadow-lg;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+.btn-danger {
+  @apply bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+.btn-success {
+  @apply bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-200;
+}
+
+/* Data Card Styles */
+.data-card {
+  @apply pro-card pro-card-hover p-6 text-center border-l-4 border-l-blue-500;
+}
+
+.data-card .icon {
+  @apply text-4xl mb-3;
+}
+
+.data-card .value {
+  @apply text-3xl font-bold text-gray-800 mb-1;
+}
+
+.data-card .label {
+  @apply text-sm text-gray-600 font-medium;
+}
+
+/* Alert Styles */
+.alert-critical {
+  @apply border-l-4 border-l-red-500 bg-gradient-to-r from-red-50 to-red-100 shadow-lg;
+}
+
+.alert-high {
+  @apply border-l-4 border-l-orange-500 bg-gradient-to-r from-orange-50 to-orange-100 shadow-lg;
+}
+
+.alert-medium {
+  @apply border-l-4 border-l-yellow-500 bg-gradient-to-r from-yellow-50 to-yellow-100 shadow-lg;
+}
+
+.alert-low {
+  @apply border-l-4 border-l-green-500 bg-gradient-to-r from-green-50 to-green-100 shadow-lg;
+}
+
+/* Map Styles */
+.leaflet-container {
+  @apply rounded-2xl shadow-2xl border-2 border-white border-opacity-20;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.leaflet-popup-content {
+  @apply font-sans text-sm;
+}
+
+.leaflet-popup-content h3 {
+  @apply font-bold text-lg text-gray-800 mb-2;
+}
+
+.leaflet-popup-content p {
+  @apply text-gray-600 mb-1;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-gray-100 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Tab Navigation */
+.tab-nav {
+  @apply flex space-x-1 bg-white rounded-2xl p-2 shadow-lg border border-gray-100;
+}
+
+.tab-button {
+  @apply flex-1 flex items-center justify-center px-6 py-4 rounded-xl font-semibold transition-all duration-200;
+}
+
+.tab-button.active {
+  @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg transform scale-105;
+}
+
+.tab-button:not(.active) {
+  @apply text-gray-600 hover:text-gray-800 hover:bg-gray-50;
+}
+
+/* Status Indicators */
+.status-indicator {
+  @apply w-3 h-3 rounded-full animate-pulse;
+}
+
+.status-indicator.online {
+  @apply bg-green-500;
+}
+
+.status-indicator.warning {
+  @apply bg-yellow-500;
+}
+
+.status-indicator.offline {
+  @apply bg-red-500;
+}
+
+/* Location Selector */
+.location-grid {
+  @apply grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4;
+}
+
+.location-button {
+  @apply p-4 rounded-2xl border-2 transition-all duration-200 text-center hover:shadow-lg hover:scale-105;
+}
+
+.location-button.active {
+  @apply border-blue-500 bg-blue-50 shadow-xl transform scale-105;
+}
+
+.location-button:not(.active) {
+  @apply border-gray-200 bg-white hover:border-gray-300;
+}
+
+/* Weather Icons */
+.weather-icon {
+  @apply text-6xl mb-4;
+}
+
+/* Professional Typography */
+.text-gradient {
+  @apply bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+}
+
+.heading-1 {
+  @apply text-4xl font-bold text-gray-900 mb-4;
+}
+
+.heading-2 {
+  @apply text-2xl font-semibold text-gray-800 mb-3;
+}
+
+.heading-3 {
+  @apply text-xl font-semibold text-gray-800 mb-2;
+}
+
+/* Loading States */
+.loading-spinner {
+  @apply animate-spin rounded-full border-4 border-blue-200 border-t-blue-600;
+}
+
+.loading-skeleton {
+  @apply animate-pulse bg-gray-200 rounded;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .location-grid {
+    @apply grid-cols-2 gap-3;
+  }
+  
+  .heading-1 {
+    @apply text-3xl;
+  }
+  
+  .heading-2 {
+    @apply text-xl;
+  }
+}
+
+/* Professional Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* Enhanced Map Markers */
+.weather-marker, .tide-marker, .alert-marker {
+  @apply shadow-lg border-2 border-white;
+}
+
+.location-title {
+  @apply shadow-2xl;
+}
+
+/* Professional Form Elements */
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200;
+}
+
+.form-button {
+  @apply btn-primary w-full;
+}
+
+/* Status Cards */
+.status-card {
+  @apply pro-card p-4 text-center;
+}
+
+.status-card.success {
+  @apply border-l-green-500 bg-green-50;
+}
+
+.status-card.warning {
+  @apply border-l-yellow-500 bg-yellow-50;
+}
+
+.status-card.error {
+  @apply border-l-red-500 bg-red-50;
+}
+
+/* Professional Footer */
+.footer-gradient {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  box-shadow: 0 -10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Alert System */
+.alert-system {
+  @apply space-y-4;
+}
+
+.alert-item {
+  @apply pro-card p-4 transition-all duration-200 hover:shadow-xl;
+}
+
+.alert-header {
+  @apply flex items-center justify-between mb-3;
+}
+
+.alert-icon {
+  @apply text-2xl;
+}
+
+.alert-severity {
+  @apply px-3 py-1 rounded-full text-xs font-bold text-white;
+}
+
+.alert-severity.critical {
+  @apply bg-red-600;
+}
+
+.alert-severity.high {
+  @apply bg-orange-500;
+}
+
+.alert-severity.medium {
+  @apply bg-yellow-500;
+}
+
+.alert-severity.low {
+  @apply bg-green-500;
+}
+
+/* Professional Dashboard Layout */
+.dashboard-container {
+  @apply min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50;
+}
+
+.dashboard-header {
+  @apply bg-white shadow-lg border-b border-gray-200;
+}
+
+.dashboard-content {
+  @apply container mx-auto px-6 py-8;
+}
+
+.dashboard-grid {
+  @apply grid gap-6;
+}
+
+.dashboard-grid.cols-1 {
+  @apply grid-cols-1;
+}
+
+.dashboard-grid.cols-2 {
+  @apply grid-cols-1 lg:grid-cols-2;
+}
+
+.dashboard-grid.cols-3 {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+.dashboard-grid.cols-4 {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-4;
+}
+
+/* Enhanced Map Container */
+.map-container {
+  @apply relative h-full w-full rounded-2xl overflow-hidden shadow-2xl;
+}
+
+.map-overlay {
+  @apply absolute top-4 left-4 z-10 bg-white bg-opacity-95 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-gray-200;
+}
+
+/* Professional Data Display */
+.data-display {
+  @apply pro-card p-6;
+}
+
+.data-row {
+  @apply flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0;
+}
+
+.data-label {
+  @apply text-gray-600 font-medium;
+}
+
+.data-value {
+  @apply text-gray-800 font-semibold;
+}
+
+/* Enhanced Community Dashboard */
+.community-tabs {
+  @apply flex space-x-1 bg-white rounded-2xl p-2 shadow-lg border border-gray-100 mb-6;
+}
+
+.community-tab {
+  @apply flex-1 flex items-center justify-center px-4 py-3 rounded-xl font-medium transition-all duration-200;
+}
+
+.community-tab.active {
+  @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg;
+}
+
+.community-tab:not(.active) {
+  @apply text-gray-600 hover:text-gray-800 hover:bg-gray-50;
+}
+
+/* Professional Loading States */
+.loading-container {
+  @apply flex items-center justify-center py-12;
+}
+
+.loading-content {
+  @apply text-center;
+}
+
+.loading-spinner-large {
+  @apply loading-spinner w-16 h-16 mx-auto mb-4;
+}
+
+.loading-text {
+  @apply text-gray-600 text-lg;
+}
+
+/* Enhanced Error States */
+.error-container {
+  @apply mt-6 p-6 bg-red-50 border border-red-200 rounded-2xl;
+}
+
+.error-content {
+  @apply flex items-center;
+}
+
+.error-icon {
+  @apply text-red-500 mr-3 text-2xl;
+}
+
+.error-message {
+  @apply text-red-700 font-medium;
+}
+
+/* Professional Success States */
+.success-container {
+  @apply mt-6 p-6 bg-green-50 border border-green-200 rounded-2xl;
+}
+
+.success-content {
+  @apply flex items-center;
+}
+
+.success-icon {
+  @apply text-green-500 mr-3 text-2xl;
+}
+
+.success-message {
+  @apply text-green-700 font-medium;
+}
