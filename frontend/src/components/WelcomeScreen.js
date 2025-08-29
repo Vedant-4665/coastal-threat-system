@@ -78,7 +78,7 @@ const WelcomeScreen = ({ onGetStarted }) => {
               { name: "Miami, USA", flag: "🇺🇸" },
               { name: "Tokyo, Japan", flag: "🇯🇵" },
               { name: "Sydney, Australia", flag: "🇦🇺" },
-              { name: "London, UK", flag: "🇬🇧" },
+              { name: "Barcelona, Spain", flag: "🇪🇸" },
               { name: "Rio, Brazil", flag: "🇧🇷" },
               { name: "Cape Town, SA", flag: "🇿🇦" },
               { name: "Singapore", flag: "🇸🇬" },

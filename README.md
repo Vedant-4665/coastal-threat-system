@@ -21,8 +21,8 @@ Monitor **ANY coastal location worldwide**:
 - **Miami, USA** 🇺🇸
 - **Tokyo, Japan** 🇯🇵
 - **Sydney, Australia** 🇦🇺
-- **London, UK** 🇬🇧
-- **Rio, Brazil** 🇧🇷
+- **Barcelona, Spain** 🇪🇸
+- **Rio de Janeiro, Brazil** 🇧🇷
 - **Cape Town, South Africa** 🇿🇦
 - **Singapore** 🇸🇬
 - **Dubai, UAE** 🇦🇪

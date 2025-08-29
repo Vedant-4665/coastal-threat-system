@@ -27,7 +27,7 @@ class UnifiedDataService:
             "miami": {"name": "Miami, USA", "lat": 25.7617, "lon": -80.1918, "country": "USA", "timezone": "EST"},
             "sydney": {"name": "Sydney, Australia", "lat": -33.8688, "lon": 151.2093, "country": "Australia", "timezone": "AEST"},
             "tokyo": {"name": "Tokyo, Japan", "lat": 35.6762, "lon": 139.6503, "country": "Japan", "timezone": "JST"},
-            "london": {"name": "London, UK", "lat": 51.5074, "lon": -0.1278, "country": "UK", "timezone": "GMT"},
+            "barcelona": {"name": "Barcelona, Spain", "lat": 41.3851, "lon": 2.1734, "country": "Spain", "timezone": "CET"},
             "rio": {"name": "Rio de Janeiro, Brazil", "lat": -22.9068, "lon": -43.1729, "country": "Brazil", "timezone": "BRT"},
             "cape_town": {"name": "Cape Town, South Africa", "lat": -33.9249, "lon": 18.4241, "country": "South Africa", "timezone": "SAST"},
             "singapore": {"name": "Singapore", "lat": 1.3521, "lon": 103.8198, "country": "Singapore", "timezone": "SGT"},

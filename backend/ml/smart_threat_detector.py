@@ -22,6 +22,8 @@ class SmartThreatDetector:
         self.seasonal_factors = {
             'monsoon': {'wind_multiplier': 1.3, 'tide_multiplier': 1.2},
             'hurricane': {'wind_multiplier': 1.5, 'tide_multiplier': 1.4},
+            'typhoon': {'wind_multiplier': 1.4, 'tide_multiplier': 1.3},
+            'mediterranean_storm': {'wind_multiplier': 1.2, 'tide_multiplier': 1.1},
             'normal': {'wind_multiplier': 1.0, 'tide_multiplier': 1.0}
         }
     
@@ -213,6 +215,10 @@ class SmartThreatDetector:
         # Pacific typhoon season (May-October)
         elif month in [5, 6, 7, 8, 9, 10] and any(region in location.lower() for region in ['japan', 'philippines', 'china', 'taiwan']):
             return 'typhoon'
+        
+        # Mediterranean storm season (October-March)
+        elif month in [10, 11, 12, 1, 2, 3] and any(region in location.lower() for region in ['spain', 'barcelona', 'mediterranean', 'italy', 'greece']):
+            return 'mediterranean_storm'
         
         else:
             return 'normal'
