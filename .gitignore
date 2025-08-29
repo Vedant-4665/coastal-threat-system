@@ -79,6 +79,9 @@ frontend/yarn-error.log*
 firebase-debug.log
 firebase-debug.*.log
 .firebase/
+backend/firebase-service-account.json
+backend/*-service-account.json
+backend/*service-account*.json
 
 # Temporary files
 *.tmp
