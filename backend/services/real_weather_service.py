@@ -35,7 +35,7 @@ class RealWeatherService:
                 'pressure': data['main']['pressure'],
                 'description': data['weather'][0]['description'],
                 'location': f"{lat},{lon}",
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.utcnow(),  # Return datetime object, not ISO string
                 'source': 'openweathermap_real'
             }
             
@@ -79,7 +79,7 @@ class RealWeatherService:
             return {
                 'forecasts': forecasts,
                 'location': f"{lat},{lon}",
-                'timestamp': datetime.utcnow().isoformat(),
+                'timestamp': datetime.utcnow(),  # Return datetime object, not ISO string
                 'source': 'openweathermap_real'
             }
             
