@@ -18,16 +18,59 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
   // Get coordinates for the current location
   const getLocationCoordinates = () => {
     const locations = {
+      // Asia-Pacific
       "mumbai": { lat: 19.0760, lon: 72.8777, name: "Mumbai, India" },
-      "miami": { lat: 25.7617, lon: -80.1918, name: "Miami, USA" },
-      "sydney": { lat: -33.8688, lon: 151.2093, name: "Sydney, Australia" },
+      "karachi": { lat: 24.8607, lon: 67.0011, name: "Karachi, Pakistan" },
       "tokyo": { lat: 35.6762, lon: 139.6503, name: "Tokyo, Japan" },
-      "london": { lat: 51.5074, lon: -0.1278, name: "London, UK" },
-      "rio": { lat: -22.9068, lon: -43.1729, name: "Rio de Janeiro, Brazil" },
-      "cape_town": { lat: -33.9249, lon: 18.4241, name: "Cape Town, South Africa" },
       "singapore": { lat: 1.3521, lon: 103.8198, name: "Singapore" },
+      "sydney": { lat: -33.8688, lon: 151.2093, name: "Sydney, Australia" },
+      "shanghai": { lat: 31.2304, lon: 121.4737, name: "Shanghai, China" },
+      "hong_kong": { lat: 22.3193, lon: 114.1694, name: "Hong Kong" },
+      "bangkok": { lat: 13.7563, lon: 100.5018, name: "Bangkok, Thailand" },
+      "manila": { lat: 14.5995, lon: 120.9842, name: "Manila, Philippines" },
+      "jakarta": { lat: -6.2088, lon: 106.8456, name: "Jakarta, Indonesia" },
+      
+      // Europe
+      "london": { lat: 51.5074, lon: -0.1278, name: "London, UK" },
+      "paris": { lat: 48.8566, lon: 2.3522, name: "Paris, France" },
+      "barcelona": { lat: 41.3851, lon: 2.1734, name: "Barcelona, Spain" },
+      "amsterdam": { lat: 52.3676, lon: 4.9041, name: "Amsterdam, Netherlands" },
+      "oslo": { lat: 59.9139, lon: 10.7522, name: "Oslo, Norway" },
+      "stockholm": { lat: 59.3293, lon: 18.0686, name: "Stockholm, Sweden" },
+      "helsinki": { lat: 60.1699, lon: 24.9384, name: "Helsinki, Finland" },
+      "copenhagen": { lat: 55.6761, lon: 12.5683, name: "Copenhagen, Denmark" },
+      "dublin": { lat: 53.3498, lon: -6.2603, name: "Dublin, Ireland" },
+      "athens": { lat: 37.9838, lon: 23.7275, name: "Athens, Greece" },
+      
+      // Americas
+      "new_york": { lat: 40.7128, lon: -74.0060, name: "New York, USA" },
+      "miami": { lat: 25.7617, lon: -80.1918, name: "Miami, USA" },
+      "los_angeles": { lat: 34.0522, lon: -118.2437, name: "Los Angeles, USA" },
+      "san_francisco": { lat: 37.7749, lon: -122.4194, name: "San Francisco, USA" },
+      "vancouver": { lat: 49.2827, lon: -123.1207, name: "Vancouver, Canada" },
+      "toronto": { lat: 43.6532, lon: -79.3832, name: "Toronto, Canada" },
+      "montreal": { lat: 45.5017, lon: -73.5673, name: "Montreal, Canada" },
+      "rio": { lat: -22.9068, lon: -43.1729, name: "Rio de Janeiro, Brazil" },
+      "sao_paulo": { lat: -23.5505, lon: -46.6333, name: "São Paulo, Brazil" },
+      "buenos_aires": { lat: -34.6118, lon: -58.3960, name: "Buenos Aires, Argentina" },
+      "lima": { lat: -12.0464, lon: -77.0428, name: "Lima, Peru" },
+      "santiago": { lat: -33.4489, lon: -70.6693, name: "Santiago, Chile" },
+      
+      // Africa & Middle East
+      "cape_town": { lat: -33.9249, lon: 18.4241, name: "Cape Town, South Africa" },
+      "cairo": { lat: 30.0444, lon: 31.2357, name: "Cairo, Egypt" },
+      "casablanca": { lat: 33.5731, lon: -7.5898, name: "Casablanca, Morocco" },
+      "lagos": { lat: 6.5244, lon: 3.3792, name: "Lagos, Nigeria" },
       "dubai": { lat: 25.2048, lon: 55.2708, name: "Dubai, UAE" },
-      "vancouver": { lat: 49.2827, lon: -123.1207, name: "Vancouver, Canada" }
+      "abuja": { lat: 9.0820, lon: 7.3986, name: "Abuja, Nigeria" },
+      "nairobi": { lat: -1.2921, lon: 36.8219, name: "Nairobi, Kenya" },
+      "dar_es_salaam": { lat: -6.8230, lon: 39.2695, name: "Dar es Salaam, Tanzania" },
+      
+      // Oceania
+      "auckland": { lat: -36.8485, lon: 174.7633, name: "Auckland, New Zealand" },
+      "wellington": { lat: -41.2866, lon: 174.7756, name: "Wellington, New Zealand" },
+      "fiji": { lat: -18.1416, lon: 178.4419, name: "Suva, Fiji" },
+      "papua_new_guinea": { lat: -9.4438, lon: 147.1803, name: "Port Moresby, PNG" }
     };
 
     // Check if it's a custom location with coordinates
@@ -40,13 +83,55 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
       }
     }
 
-    return locations[currentLocation] || locations.mumbai;
+    // Check for exact match first
+    if (locations[currentLocation]) {
+      return locations[currentLocation];
+    }
+
+    // Check for partial matches (e.g., "new york" matches "new_york")
+    const normalizedInput = currentLocation.toLowerCase().replace(" ", "_").replace("-", "_");
+    for (const [cityKey, cityInfo] of Object.entries(locations)) {
+      if (normalizedInput === cityKey || 
+          cityKey.replace("_", "") === normalizedInput.replace("_", "") ||
+          cityKey.replace("_", " ") === currentLocation.toLowerCase()) {
+        return cityInfo;
+      }
+    }
+
+    // If still no match, generate coordinates for unknown cities (same logic as backend)
+    return generateUnknownCityCoordinates(currentLocation);
+  };
+
+  const generateUnknownCityCoordinates = (cityName) => {
+    // Generate realistic coordinates based on city name hash (same as backend)
+    const cityHash = cityName.toLowerCase().split('').reduce((hash, char) => {
+      return ((hash << 5) - hash + char.charCodeAt(0)) & 0xffffffff;
+    }, 0);
+    
+    // Use hash to generate realistic but varied coordinates
+    let lat = -90 + (cityHash % 180);  // -90 to 90
+    let lon = -180 + ((cityHash >> 8) % 360);  // -180 to 180
+    
+    // Ensure it's coastal (near water)
+    if (Math.abs(lat) > 60) {  // Too close to poles
+      lat = lat * 0.6;
+    }
+    if (Math.abs(lon) > 150) {  // Too far from major coastal areas
+      lon = lon * 0.8;
+    }
+    
+    return {
+      lat: Math.round(lat * 10000) / 10000,
+      lon: Math.round(lon * 10000) / 10000,
+      name: `${cityName.charAt(0).toUpperCase() + cityName.slice(1)}, Coastal City`
+    };
   };
 
   useEffect(() => {
     if (!mapRef.current) return;
 
     const location = getLocationCoordinates();
+    console.log('MapView: Updating map for location:', currentLocation, 'coordinates:', location); // Debug log
 
     // Initialize map
     if (!mapInstanceRef.current) {
