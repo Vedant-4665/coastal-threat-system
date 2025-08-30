@@ -143,6 +143,14 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
       }).addTo(map);
 
       mapInstanceRef.current = map;
+      
+      // Add zoom event listener to update zoom level indicator
+      map.on('zoomend', () => {
+        const zoomLevel = document.getElementById('zoom-level');
+        if (zoomLevel) {
+          zoomLevel.textContent = map.getZoom();
+        }
+      });
     } else {
       // Update map view for existing map
       const map = mapInstanceRef.current;
@@ -320,24 +328,25 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
 
   return (
     <div className="relative h-full w-full">
-      <div className="absolute top-4 left-4 z-10 bg-white rounded-lg shadow-lg p-3">
+      {/* Map Legend - Fixed positioning and responsive to zoom */}
+      <div className="absolute top-4 left-4 z-20 bg-white rounded-lg shadow-lg p-3 max-w-48">
         <h3 className="font-bold text-lg text-gray-800 mb-2">Map Legend</h3>
         <div className="space-y-2 text-sm">
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
-            <span>Weather Station</span>
+            <div className="w-4 h-4 bg-blue-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">Weather Station</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-teal-500 rounded-full"></div>
-            <span>Tide Station</span>
+            <div className="w-4 h-4 bg-teal-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">Tide Station</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-red-500 rounded-full"></div>
-            <span>Alert Zones</span>
+            <div className="w-4 h-4 bg-red-500 rounded-full flex-shrink-0"></div>
+            <span className="text-xs">Alert Zones</span>
           </div>
           <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-500 rounded-full opacity-20"></div>
-            <span>Coastal Boundary</span>
+            <div className="w-4 h-4 bg-green-500 rounded-full opacity-20 flex-shrink-0"></div>
+            <span className="text-xs">Coastal Boundary</span>
           </div>
         </div>
         <div className="mt-3 pt-3 border-t border-gray-200">
@@ -345,12 +354,37 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
             <strong>Monitoring:</strong> {getLocationCoordinates().name}
           </div>
         </div>
+        
+        {/* Zoom Level Indicator */}
+        <div className="mt-2 pt-2 border-t border-gray-200">
+          <div className="text-xs text-gray-500">
+            <strong>Zoom:</strong> <span id="zoom-level">10</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Zoom Controls - Repositioned to avoid overlap */}
+      <div className="absolute top-4 right-4 z-20">
+        <div className="bg-white rounded-lg shadow-lg p-1 space-y-1">
+          <button 
+            onClick={() => mapInstanceRef.current?.zoomIn()}
+            className="w-8 h-8 bg-white hover:bg-gray-50 border border-gray-200 rounded flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            +
+          </button>
+          <button 
+            onClick={() => mapInstanceRef.current?.zoomOut()}
+            className="w-8 h-8 bg-white hover:bg-gray-50 border border-gray-200 rounded flex items-center justify-center text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            −
+          </button>
+        </div>
       </div>
       
       <div 
         ref={mapRef} 
-        className="h-full w-full rounded-lg overflow-hidden"
-        style={{ minHeight: '400px' }}
+        className="h-full w-full rounded-lg"
+        style={{ zIndex: 1 }}
       />
     </div>
   );

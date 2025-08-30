@@ -449,3 +449,58 @@ body {
 .success-message {
   @apply text-green-700 font-medium;
 }
+
+/* Map Legend and Controls */
+.location-title {
+  background: transparent !important;
+  border: none !important;
+}
+
+.location-title div {
+  pointer-events: none;
+}
+
+/* Prevent map legend overlapping */
+.map-legend {
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.map-legend * {
+  pointer-events: auto;
+}
+
+/* Map zoom controls */
+.map-zoom-controls {
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.map-zoom-controls button {
+  pointer-events: auto;
+}
+
+/* Ensure map container doesn't interfere with controls */
+.leaflet-container {
+  z-index: 1;
+}
+
+.leaflet-control-container {
+  z-index: 1000;
+}
+
+/* Responsive map legend */
+@media (max-width: 768px) {
+  .map-legend {
+    max-width: 200px;
+    font-size: 0.75rem;
+  }
+  
+  .map-legend h3 {
+    font-size: 0.875rem;
+  }
+  
+  .map-legend .text-xs {
+    font-size: 0.625rem;
+  }
+}

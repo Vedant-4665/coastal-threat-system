@@ -19,6 +19,14 @@ const Dashboard = ({ onBackToWelcome }) => {
 
   useEffect(() => {
     fetchData();
+    
+    // Set up real-time updates for alerts every 30 seconds
+    const alertInterval = setInterval(() => {
+      fetchAlertsOnly();
+    }, 30000); // 30 seconds
+    
+    // Cleanup interval on component unmount
+    return () => clearInterval(alertInterval);
   }, [currentLocation]);
 
   const fetchData = async (location = currentLocation) => {
@@ -38,6 +46,15 @@ const Dashboard = ({ onBackToWelcome }) => {
       console.error('Data fetch error:', err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAlertsOnly = async () => {
+    try {
+      const alertsData = await getAlerts();
+      setAlerts(alertsData.alerts || []);
+    } catch (err) {
+      console.error('Error fetching alerts:', err);
     }
   };
 
@@ -169,7 +186,7 @@ const Dashboard = ({ onBackToWelcome }) => {
               <HelpTooltip title="Active Threat Alerts" position="top">
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-4">Active Alerts</h2>
-                  <AlertList alerts={alerts} />
+                  <AlertList alerts={alerts} onRefresh={fetchAlertsOnly} />
                 </div>
               </HelpTooltip>
             </div>
