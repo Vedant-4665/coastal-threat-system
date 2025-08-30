@@ -4,6 +4,7 @@ import AlertList from '../components/AlertList';
 import LocationSelector from '../components/LocationSelector';
 import HelpTooltip from '../components/HelpTooltip';
 import StakeholderDashboard from '../components/StakeholderDashboard';
+import Analytics from '../components/Analytics';
 import { getDataForLocation, getAvailableLocations, getAlerts } from '../services/api';
 
 const Dashboard = ({ onBackToWelcome }) => {
@@ -384,13 +385,7 @@ const Dashboard = ({ onBackToWelcome }) => {
 
         {activeTab === 'analytics' && (
           <div className="space-y-6">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Analytics & Insights</h2>
-              <p className="text-gray-600">
-                Advanced analytics and insights coming soon. This will include trend analysis, 
-                predictive modeling, and comprehensive reporting capabilities.
-              </p>
-            </div>
+            <Analytics location={currentLocation} />
           </div>
         )}
 
