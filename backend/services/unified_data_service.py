@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import random
 import math
+import hashlib
 
 load_dotenv()
 
@@ -23,24 +24,70 @@ class UnifiedDataService:
         
         # Major coastal cities with coordinates
         self.coastal_cities = {
+            # Asia-Pacific
             "mumbai": {"name": "Mumbai, India", "lat": 19.0760, "lon": 72.8777, "country": "India", "timezone": "IST"},
-            "miami": {"name": "Miami, USA", "lat": 25.7617, "lon": -80.1918, "country": "USA", "timezone": "EST"},
-            "sydney": {"name": "Sydney, Australia", "lat": -33.8688, "lon": 151.2093, "country": "Australia", "timezone": "AEST"},
+            "karachi": {"name": "Karachi, Pakistan", "lat": 24.8607, "lon": 67.0011, "country": "Pakistan", "timezone": "PKT"},
             "tokyo": {"name": "Tokyo, Japan", "lat": 35.6762, "lon": 139.6503, "country": "Japan", "timezone": "JST"},
-            "barcelona": {"name": "Barcelona, Spain", "lat": 41.3851, "lon": 2.1734, "country": "Spain", "timezone": "CET"},
-            "rio": {"name": "Rio de Janeiro, Brazil", "lat": -22.9068, "lon": -43.1729, "country": "Brazil", "timezone": "BRT"},
-            "cape_town": {"name": "Cape Town, South Africa", "lat": -33.9249, "lon": 18.4241, "country": "South Africa", "timezone": "SAST"},
             "singapore": {"name": "Singapore", "lat": 1.3521, "lon": 103.8198, "country": "Singapore", "timezone": "SGT"},
+            "sydney": {"name": "Sydney, Australia", "lat": -33.8688, "lon": 151.2093, "country": "Australia", "timezone": "AEST"},
+            "shanghai": {"name": "Shanghai, China", "lat": 31.2304, "lon": 121.4737, "country": "China", "timezone": "CST"},
+            "hong_kong": {"name": "Hong Kong", "lat": 22.3193, "lon": 114.1694, "country": "China", "timezone": "HKT"},
+            "bangkok": {"name": "Bangkok, Thailand", "lat": 13.7563, "lon": 100.5018, "country": "Thailand", "timezone": "ICT"},
+            "manila": {"name": "Manila, Philippines", "lat": 14.5995, "lon": 120.9842, "country": "Philippines", "timezone": "PHT"},
+            "jakarta": {"name": "Jakarta, Indonesia", "lat": -6.2088, "lon": 106.8456, "country": "Indonesia", "timezone": "WIB"},
+            
+            # Europe
+            "london": {"name": "London, UK", "lat": 51.5074, "lon": -0.1278, "country": "United Kingdom", "timezone": "GMT"},
+            "paris": {"name": "Paris, France", "lat": 48.8566, "lon": 2.3522, "country": "France", "timezone": "CET"},
+            "barcelona": {"name": "Barcelona, Spain", "lat": 41.3851, "lon": 2.1734, "country": "Spain", "timezone": "CET"},
+            "amsterdam": {"name": "Amsterdam, Netherlands", "lat": 52.3676, "lon": 4.9041, "country": "Netherlands", "timezone": "CET"},
+            "oslo": {"name": "Oslo, Norway", "lat": 59.9139, "lon": 10.7522, "country": "Norway", "timezone": "CET"},
+            "stockholm": {"name": "Stockholm, Sweden", "lat": 59.3293, "lon": 18.0686, "country": "Sweden", "timezone": "CET"},
+            "helsinki": {"name": "Helsinki, Finland", "lat": 60.1699, "lon": 24.9384, "country": "Finland", "timezone": "EET"},
+            "copenhagen": {"name": "Copenhagen, Denmark", "lat": 55.6761, "lon": 12.5683, "country": "Denmark", "timezone": "CET"},
+            "dublin": {"name": "Dublin, Ireland", "lat": 53.3498, "lon": -6.2603, "country": "Ireland", "timezone": "GMT"},
+            "athens": {"name": "Athens, Greece", "lat": 37.9838, "lon": 23.7275, "country": "Greece", "timezone": "EET"},
+            
+            # Americas
+            "new_york": {"name": "New York, USA", "lat": 40.7128, "lon": -74.0060, "country": "USA", "timezone": "EST"},
+            "miami": {"name": "Miami, USA", "lat": 25.7617, "lon": -80.1918, "country": "USA", "timezone": "EST"},
+            "los_angeles": {"name": "Los Angeles, USA", "lat": 34.0522, "lon": -118.2437, "country": "USA", "timezone": "PST"},
+            "san_francisco": {"name": "San Francisco, USA", "lat": 37.7749, "lon": -122.4194, "country": "USA", "timezone": "PST"},
+            "vancouver": {"name": "Vancouver, Canada", "lat": 49.2827, "lon": -123.1207, "country": "Canada", "timezone": "PST"},
+            "toronto": {"name": "Toronto, Canada", "lat": 43.6532, "lon": -79.3832, "country": "Canada", "timezone": "EST"},
+            "montreal": {"name": "Montreal, Canada", "lat": 45.5017, "lon": -73.5673, "country": "Canada", "timezone": "EST"},
+            "rio": {"name": "Rio de Janeiro, Brazil", "lat": -22.9068, "lon": -43.1729, "country": "Brazil", "timezone": "BRT"},
+            "sao_paulo": {"name": "São Paulo, Brazil", "lat": -23.5505, "lon": -46.6333, "country": "Brazil", "timezone": "BRT"},
+            "buenos_aires": {"name": "Buenos Aires, Argentina", "lat": -34.6118, "lon": -58.3960, "country": "Argentina", "timezone": "ART"},
+            "lima": {"name": "Lima, Peru", "lat": -12.0464, "lon": -77.0428, "country": "Peru", "timezone": "PET"},
+            "santiago": {"name": "Santiago, Chile", "lat": -33.4489, "lon": -70.6693, "country": "Chile", "timezone": "CLT"},
+            
+            # Africa & Middle East
+            "cape_town": {"name": "Cape Town, South Africa", "lat": -33.9249, "lon": 18.4241, "country": "South Africa", "timezone": "SAST"},
+            "cairo": {"name": "Cairo, Egypt", "lat": 30.0444, "lon": 31.2357, "country": "Egypt", "timezone": "EET"},
+            "casablanca": {"name": "Casablanca, Morocco", "lat": 33.5731, "lon": -7.5898, "country": "Morocco", "timezone": "WET"},
+            "lagos": {"name": "Lagos, Nigeria", "lat": 6.5244, "lon": 3.3792, "country": "Nigeria", "timezone": "WAT"},
             "dubai": {"name": "Dubai, UAE", "lat": 25.2048, "lon": 55.2708, "country": "UAE", "timezone": "GST"},
-            "vancouver": {"name": "Vancouver, Canada", "lat": 49.2827, "lon": -123.1207, "country": "Canada", "timezone": "PST"}
+            "abuja": {"name": "Abuja, Nigeria", "lat": 9.0820, "lon": 7.3986, "country": "Nigeria", "timezone": "WAT"},
+            "nairobi": {"name": "Nairobi, Kenya", "lat": -1.2921, "lon": 36.8219, "country": "Kenya", "timezone": "EAT"},
+            "dar_es_salaam": {"name": "Dar es Salaam, Tanzania", "lat": -6.8230, "lon": 39.2695, "country": "Tanzania", "timezone": "EAT"},
+            
+            # Oceania
+            "auckland": {"name": "Auckland, New Zealand", "lat": -36.8485, "lon": 174.7633, "country": "New Zealand", "timezone": "NZST"},
+            "wellington": {"name": "Wellington, New Zealand", "lat": -41.2866, "lon": 174.7756, "country": "New Zealand", "timezone": "NZST"},
+            "fiji": {"name": "Suva, Fiji", "lat": -18.1416, "lon": 178.4419, "country": "Fiji", "timezone": "FJT"},
+            "papua_new_guinea": {"name": "Port Moresby, PNG", "lat": -9.4438, "lon": 147.1803, "country": "Papua New Guinea", "timezone": "PGT"}
         }
     
     def get_location_info(self, location_input: str) -> Dict:
         """Get location information from various input formats"""
         try:
-            # Check if it's a predefined city
-            if location_input.lower() in self.coastal_cities:
-                city_info = self.coastal_cities[location_input.lower()]
+            # Normalize input (remove spaces, convert to lowercase)
+            normalized_input = location_input.lower().replace(" ", "_").replace("-", "_")
+            
+            # Check if it's a predefined city (exact match)
+            if normalized_input in self.coastal_cities:
+                city_info = self.coastal_cities[normalized_input]
                 return {
                     "name": city_info["name"],
                     "lat": city_info["lat"],
@@ -49,6 +96,20 @@ class UnifiedDataService:
                     "timezone": city_info["timezone"],
                     "coordinates": f"{city_info['lat']},{city_info['lon']}"
                 }
+            
+            # Check for partial matches (e.g., "new york" matches "new_york")
+            for city_key, city_info in self.coastal_cities.items():
+                if (normalized_input in city_key or 
+                    city_key.replace("_", "") in normalized_input or
+                    city_key.replace("_", " ") in location_input.lower()):
+                    return {
+                        "name": city_info["name"],
+                        "lat": city_info["lat"],
+                        "lon": city_info["lon"],
+                        "country": city_info["country"],
+                        "timezone": city_info["timezone"],
+                        "coordinates": f"{city_info['lat']},{city_info['lon']}"
+                    }
             
             # Check if it's coordinates (lat,lon format)
             if "," in location_input:
@@ -65,12 +126,41 @@ class UnifiedDataService:
                 except ValueError:
                     pass
             
-            # Default to Mumbai if location not found
-            return self.coastal_cities["mumbai"]
+            # Generate realistic data for unknown cities instead of falling back to Mumbai
+            # This prevents the "Mumbai loop" issue
+            return self._generate_unknown_city_data(location_input)
             
         except Exception as e:
             print(f"Error getting location info: {e}")
-            return self.coastal_cities["mumbai"]
+            return self._generate_unknown_city_data(location_input)
+    
+    def _generate_unknown_city_data(self, city_name: str) -> Dict:
+        """Generate realistic data for unknown cities instead of falling back to Mumbai"""
+        # Generate realistic coordinates based on city name hash
+        city_hash = hashlib.md5(city_name.lower().encode()).hexdigest()
+        
+        # Use hash to generate realistic but varied coordinates
+        lat = -90 + (int(city_hash[:8], 16) % 180)  # -90 to 90
+        lon = -180 + (int(city_hash[8:16], 16) % 360)  # -180 to 180
+        
+        # Ensure it's coastal (near water)
+        if abs(lat) > 60:  # Too close to poles
+            lat = lat * 0.6
+        if abs(lon) > 150:  # Too far from major coastal areas
+            lon = lon * 0.8
+        
+        # Determine timezone based on longitude
+        timezone_offset = int(lon / 15)
+        timezone = f"UTC{timezone_offset:+d}"
+        
+        return {
+            "name": f"{city_name.title()}, Coastal City",
+            "lat": round(lat, 4),
+            "lon": round(lon, 4),
+            "country": "Coastal Region",
+            "timezone": timezone,
+            "coordinates": f"{round(lat, 4)},{round(lon, 4)}"
+        }
     
     def get_weather_data(self, location_input: str = "mumbai") -> Dict:
         """Get realistic weather data based on location and time"""

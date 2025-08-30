@@ -35,8 +35,10 @@ const LocationSelector = ({ onLocationChange, currentLocation = "mumbai" }) => {
 
   const handleCustomLocation = () => {
     if (customLocation.trim()) {
+      console.log('Setting custom location:', customLocation.trim()); // Debug log
       onLocationChange(customLocation.trim());
       setSelectedLocation("custom");
+      setShowCustomInput(false);
     }
   };
 
@@ -45,17 +47,43 @@ const LocationSelector = ({ onLocationChange, currentLocation = "mumbai" }) => {
     setSelectedLocation("custom");
   };
 
+  const handleCoordinatesSubmit = () => {
+    // Get coordinate values from inputs
+    const latInput = document.querySelector('input[placeholder*="Latitude"]');
+    const lonInput = document.querySelector('input[placeholder*="Longitude"]');
+    
+    if (latInput && lonInput && latInput.value && lonInput.value) {
+      const coordinates = `${latInput.value},${lonInput.value}`;
+      console.log('Setting coordinates:', coordinates); // Debug log
+      onLocationChange(coordinates);
+      setSelectedLocation("custom");
+      setShowCustomInput(false);
+      // Clear inputs
+      latInput.value = '';
+      lonInput.value = '';
+    }
+  };
+
   const popularCities = [
     { id: "mumbai", name: "Mumbai, India", flag: "🇮🇳" },
-    { id: "miami", name: "Miami, USA", flag: "🇺🇸" },
-    { id: "sydney", name: "Sydney, Australia", flag: "🇦🇺" },
+    { id: "karachi", name: "Karachi, Pakistan", flag: "🇵🇰" },
     { id: "tokyo", name: "Tokyo, Japan", flag: "🇯🇵" },
+    { id: "singapore", name: "Singapore", flag: "🇸🇬" },
+    { id: "sydney", name: "Sydney, Australia", flag: "🇦🇺" },
+    { id: "shanghai", name: "Shanghai, China", flag: "🇨🇳" },
+    { id: "hong_kong", name: "Hong Kong", flag: "🇭🇰" },
     { id: "london", name: "London, UK", flag: "🇬🇧" },
+    { id: "paris", name: "Paris, France", flag: "🇫🇷" },
+    { id: "barcelona", name: "Barcelona, Spain", flag: "🇪🇸" },
+    { id: "new_york", name: "New York, USA", flag: "🇺🇸" },
+    { id: "miami", name: "Miami, USA", flag: "🇺🇸" },
+    { id: "los_angeles", name: "Los Angeles, USA", flag: "🇺🇸" },
+    { id: "vancouver", name: "Vancouver, Canada", flag: "🇨🇦" },
     { id: "rio", name: "Rio de Janeiro, Brazil", flag: "🇧🇷" },
     { id: "cape_town", name: "Cape Town, South Africa", flag: "🇿🇦" },
-    { id: "singapore", name: "Singapore", flag: "🇸🇬" },
     { id: "dubai", name: "Dubai, UAE", flag: "🇦🇪" },
-    { id: "vancouver", name: "Vancouver, Canada", flag: "🇨🇦" }
+    { id: "cairo", name: "Cairo, Egypt", flag: "🇪🇬" },
+    { id: "auckland", name: "Auckland, New Zealand", flag: "🇳🇿" }
   ];
 
   return (
@@ -147,10 +175,7 @@ const LocationSelector = ({ onLocationChange, currentLocation = "mumbai" }) => {
                 </div>
                 <div className="col-span-2">
                   <button
-                    onClick={() => {
-                      // Handle coordinates input
-                      setShowCustomInput(false);
-                    }}
+                    onClick={handleCoordinatesSubmit}
                     className="w-full px-3 py-2 text-sm bg-green-600 text-white rounded hover:bg-green-700"
                   >
                     Use Coordinates
@@ -168,13 +193,17 @@ const LocationSelector = ({ onLocationChange, currentLocation = "mumbai" }) => {
             <span className="text-blue-600">📍</span>
             <span className="font-medium text-blue-800">
               {selectedLocation === "custom" && customLocation 
-                ? customLocation 
+                ? `${customLocation} (Custom Location)`
                 : popularCities.find(city => city.id === selectedLocation)?.name || "Mumbai, India"
               }
             </span>
             <span className="text-sm text-blue-600">
               {selectedLocation === "custom" ? "(Custom)" : "(Predefined)"}
             </span>
+          </div>
+          {/* Debug info */}
+          <div className="text-xs text-gray-400 mt-2">
+            Debug: selectedLocation={selectedLocation}, customLocation={customLocation}
           </div>
         </div>
 

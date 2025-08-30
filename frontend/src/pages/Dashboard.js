@@ -21,20 +21,20 @@ const Dashboard = ({ onBackToWelcome }) => {
     fetchData();
   }, [currentLocation]);
 
-  const fetchData = async () => {
+  const fetchData = async (location = currentLocation) => {
     try {
       setLoading(true);
       setError(null);
       
       const [locationData, alertsData] = await Promise.all([
-        getDataForLocation(currentLocation),
+        getDataForLocation(location),
         getAlerts()
       ]);
       
       setData(locationData);
       setAlerts(alertsData.alerts || []);
     } catch (err) {
-      setError('Failed to fetch data');
+      setError(`Failed to fetch data for ${location}`);
       console.error('Data fetch error:', err);
     } finally {
       setLoading(false);
@@ -42,7 +42,10 @@ const Dashboard = ({ onBackToWelcome }) => {
   };
 
   const handleLocationChange = (location) => {
+    console.log('Location changed to:', location); // Debug log
     setCurrentLocation(location);
+    // Automatically fetch data for the new location
+    fetchData(location);
   };
 
   const handleStakeholderSelect = (stakeholderType) => {
