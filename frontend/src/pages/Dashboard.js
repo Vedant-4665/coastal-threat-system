@@ -191,77 +191,141 @@ const Dashboard = ({ onBackToWelcome }) => {
               </HelpTooltip>
             </div>
 
-            {/* Data Cards Row */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Data Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <HelpTooltip title="Current Weather Conditions" position="top">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <span className="text-blue-600 text-lg">🌤️</span>
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Weather</p>
+                      {loading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-gray-200 rounded w-20 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-16"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {data?.weather?.temperature ? `${data.weather.temperature}°C` : 'N/A'}
+                          </p>
+                          {data?.weather?.description && (
+                            <p className="text-xs text-gray-500 capitalize">{data.weather.description}</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="text-3xl">🌤️</div>
+                  </div>
+                  {!loading && data?.weather && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                        <div>Humidity: {data.weather.humidity}%</div>
+                        <div>Wind: {data.weather.wind_speed} m/s</div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Weather</p>
-                      <p className="text-lg font-semibold text-gray-900">
-                        {data?.weather?.temperature}°C
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </HelpTooltip>
 
-              <HelpTooltip title="Ocean Wave Conditions" position="top">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-cyan-100 rounded-lg flex items-center justify-center">
-                        <span className="text-cyan-600 text-lg">🌊</span>
+              <HelpTooltip title="Wave Height and Conditions" position="top">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Waves</p>
+                      {loading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-20"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {data?.tide?.tide_height ? `${data.tide.tide_height}m` : 'N/A'}
+                          </p>
+                          {data?.tide?.tide_type && (
+                            <p className="text-xs text-gray-500 capitalize">{data.tide.tide_type}</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="text-3xl">🌊</div>
+                  </div>
+                  {!loading && data?.tide && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                        <div>Status: {data.tide.tide_type}</div>
+                        <div>Source: {data.tide.source}</div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Waves</p>
-                      <p className="text-lg font-semibold text-gray-900">
-                        {data?.ocean?.wave_height} m
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </HelpTooltip>
 
-              <HelpTooltip title="Current Tide Status" position="top">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
-                        <span className="text-green-600 text-lg">🌊</span>
+              <HelpTooltip title="Tide Information" position="top">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Tide</p>
+                      {loading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-gray-200 rounded w-16 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-16"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {data?.tide?.tide_height ? `${data.tide.tide_height}m` : 'N/A'}
+                          </p>
+                          {data?.tide?.tide_type && (
+                            <p className="text-xs text-gray-500 capitalize">{data.tide.tide_type}</p>
+                          )}
+                        </>
+                      )}
+                    </div>
+                    <div className="text-3xl">🌊</div>
+                  </div>
+                  {!loading && data?.tide && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="grid grid-cols-2 gap-2 text-xs text-gray-500">
+                        <div>Height: {data.tide.tide_height}m</div>
+                        <div>Type: {data.tide.tide_type}</div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Tide</p>
-                      <p className="text-lg font-semibold text-gray-900 capitalize">
-                        {data?.ocean?.tide_status || 'N/A'}
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </HelpTooltip>
 
-              <HelpTooltip title="Active Threat Alerts" position="top">
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-                  <div className="flex items-center">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                        <span className="text-red-600 text-lg">🚨</span>
+              <HelpTooltip title="Active Alert Count" position="top">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-600">Alerts</p>
+                      {loading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-gray-200 rounded w-8 mb-2"></div>
+                          <div className="h-3 bg-gray-200 rounded w-20"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-2xl font-bold text-gray-900">
+                            {alerts?.length || 0}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {alerts?.length === 0 ? 'No active alerts' : 'Active warnings'}
+                          </p>
+                        </>
+                      )}
+                    </div>
+                    <div className="text-3xl">🚨</div>
+                  </div>
+                  {!loading && alerts && alerts.length > 0 && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <div className="text-xs text-gray-500">
+                        <div>Latest: {new Date(alerts[0]?.timestamp).toLocaleTimeString()}</div>
+                        <div>Severity: {alerts[0]?.severity || 'Unknown'}</div>
                       </div>
                     </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-500">Alerts</p>
-                      <p className="text-lg font-semibold text-gray-900">
-                        {alerts?.length || 0}
-                      </p>
-                    </div>
-                  </div>
+                  )}
                 </div>
               </HelpTooltip>
             </div>

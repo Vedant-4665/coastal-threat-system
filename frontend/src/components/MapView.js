@@ -163,157 +163,91 @@ const MapView = ({ weatherData, tideData, alerts = [], onLocationClick, currentL
     markersRef.current.forEach(marker => map.removeLayer(marker));
     markersRef.current = [];
 
-    // Add coastal boundary based on location
-    const coastalBoundary = L.circle([location.lat, location.lon], {
-      color: '#0d9488',
-      weight: 2,
-      fillColor: '#0d9488',
-      fillOpacity: 0.1,
-      radius: 50000 // 50km radius
-    }).addTo(map);
-
-    // Add location title
-    const locationTitle = L.divIcon({
-      className: 'location-title',
-      html: `
-        <div class="bg-white bg-opacity-90 px-3 py-2 rounded-lg shadow-lg border border-gray-200">
-          <h3 class="font-bold text-lg text-gray-800">${location.name}</h3>
-          <p class="text-sm text-gray-600">Coastal Monitoring Station</p>
-        </div>
-      `,
-      iconSize: [200, 60],
-      iconAnchor: [100, 0]
-    });
-
-    const titleMarker = L.marker([location.lat + 0.05, location.lon], { icon: locationTitle })
-      .addTo(map);
-    markersRef.current.push(titleMarker);
-
     // Add weather station marker
-    if (weatherData) {
-      const [lat, lon] = weatherData.location.split(',').map(Number);
-      
-      const weatherIcon = L.divIcon({
-        className: 'weather-marker',
-        html: `
-          <div class="bg-blue-500 text-white rounded-full p-2 text-xs font-bold shadow-lg">
-            🌤️
-          </div>
-        `,
+    const weatherMarker = L.marker([location.lat, location.lon], {
+      icon: L.divIcon({
+        className: 'weather-station-marker',
+        html: '<div class="weather-station-icon">🌤️</div>',
         iconSize: [40, 40],
         iconAnchor: [20, 20]
-      });
+      })
+    }).addTo(map);
+    
+    weatherMarker.bindPopup(`
+      <div class="weather-station-popup">
+        <h3 class="font-bold text-lg mb-2">${location.name}</h3>
+        <p class="text-sm text-gray-600 mb-2">Coastal Monitoring Station</p>
+        <div class="text-xs text-gray-500">
+          <div>Coordinates: ${location.lat.toFixed(4)}, ${location.lon.toFixed(4)}</div>
+          <div>Status: Active</div>
+        </div>
+      </div>
+    `);
 
-      const weatherMarker = L.marker([lat, lon], { icon: weatherIcon })
-        .addTo(map)
-        .bindPopup(`
-          <div class="p-2">
-            <h3 class="font-bold text-lg">Weather Station</h3>
-            <p><strong>Temperature:</strong> ${weatherData.temperature}°C</p>
-            <p><strong>Wind:</strong> ${weatherData.wind_speed} m/s</p>
-            <p><strong>Pressure:</strong> ${weatherData.pressure} hPa</p>
-            <p><strong>Humidity:</strong> ${weatherData.humidity}%</p>
-          </div>
-        `);
-
-      markersRef.current.push(weatherMarker);
-    }
-
-    // Add tide station marker
-    if (tideData) {
-      const [lat, lon] = tideData.location.split(',').map(Number);
-      
-      const tideIcon = L.divIcon({
-        className: 'tide-marker',
-        html: `
-          <div class="bg-teal-500 text-white rounded-full p-2 text-xs font-bold shadow-lg">
-            🌊
-          </div>
-        `,
+    // Add tide station marker (slightly offset)
+    const tideMarker = L.marker([location.lat + 0.01, location.lon + 0.01], {
+      icon: L.divIcon({
+        className: 'tide-station-marker',
+        html: '<div class="tide-station-icon">🌊</div>',
         iconSize: [40, 40],
         iconAnchor: [20, 20]
-      });
+      })
+    }).addTo(map);
+    
+    tideMarker.bindPopup(`
+      <div class="tide-station-popup">
+        <h3 class="font-bold text-lg mb-2">${location.name}</h3>
+        <p class="text-sm text-gray-600 mb-2">Tide Monitoring Station</p>
+        <div class="text-xs text-gray-500">
+          <div>Coordinates: ${(location.lat + 0.01).toFixed(4)}, ${(location.lon + 0.01).toFixed(4)}</div>
+          <div>Status: Active</div>
+        </div>
+      </div>
+    `);
 
-      const tideMarker = L.marker([lat, lon], { icon: tideIcon })
-        .addTo(map)
-        .bindPopup(`
-          <div class="p-2">
-            <h3 class="font-bold text-lg">Tide Station</h3>
-            <p><strong>Height:</strong> ${tideData.tide_height} m</p>
-            <p><strong>Type:</strong> ${tideData.tide_type}</p>
-            <p><strong>Source:</strong> ${tideData.source}</p>
-          </div>
-        `);
+    // Add coastal boundary with better styling
+    const coastalBoundary = L.circle([location.lat, location.lon], {
+      radius: 15000, // 15km radius
+      color: '#10B981',
+      fillColor: '#10B981',
+      fillOpacity: 0.1,
+      weight: 2,
+      dashArray: '5, 10'
+    }).addTo(map);
+    
+    coastalBoundary.bindPopup(`
+      <div class="coastal-boundary-popup">
+        <h3 class="font-bold text-lg mb-2">Coastal Monitoring Zone</h3>
+        <p class="text-sm text-gray-600 mb-2">${location.name}</p>
+        <div class="text-xs text-gray-500">
+          <div>Radius: 15 km</div>
+          <div>Coverage: Coastal waters & shoreline</div>
+        </div>
+      </div>
+    `);
 
-      markersRef.current.push(tideMarker);
-    }
-
-    // Add alert markers
-    if (alerts && Array.isArray(alerts)) {
-      alerts.forEach(alert => {
-        const [lat, lon] = alert.location.split(',').map(Number);
+    // Add alert zones if there are alerts
+    if (alerts && Array.isArray(alerts) && alerts.length > 0) {
+      alerts.forEach((alert, index) => {
+        const alertZone = L.circle([location.lat, location.lon], {
+          radius: 8000 + (index * 2000), // Varying radius for different alerts
+          color: '#EF4444',
+          fillColor: '#EF4444',
+          fillOpacity: 0.15,
+          weight: 3,
+          dashArray: '10, 5'
+        }).addTo(map);
         
-        let alertColor, alertIcon;
-        switch (alert.severity) {
-          case 'critical':
-            alertColor = 'bg-red-600';
-            alertIcon = '🚨';
-            break;
-          case 'high':
-            alertColor = 'bg-orange-500';
-            alertIcon = '⚠️';
-            break;
-          case 'medium':
-            alertColor = 'bg-yellow-500';
-            alertIcon = '⚡';
-            break;
-          default:
-            alertColor = 'bg-green-500';
-            alertIcon = 'ℹ️';
-        }
-
-        const alertMarkerIcon = L.divIcon({
-          className: 'alert-marker',
-          html: `
-            <div class="${alertColor} text-white rounded-full p-2 text-xs font-bold shadow-lg animate-pulse">
-              ${alertIcon}
+        alertZone.bindPopup(`
+          <div class="alert-zone-popup">
+            <h3 class="font-bold text-lg mb-2 text-red-600">${alert.alert_type?.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Alert'}</h3>
+            <p class="text-sm text-gray-600 mb-2">${alert.description || 'No description'}</p>
+            <div class="text-xs text-gray-500">
+              <div>Severity: ${alert.severity || 'Unknown'}</div>
+              <div>Time: ${new Date(alert.timestamp).toLocaleString()}</div>
             </div>
-          `,
-          iconSize: [40, 40],
-          iconAnchor: [20, 20]
-        });
-
-        const alertMarker = L.marker([lat, lon], { icon: alertMarkerIcon })
-          .addTo(map)
-          .bindPopup(`
-            <div class="p-3 max-w-xs">
-              <h3 class="font-bold text-lg text-red-600">${alert.alert_type?.toUpperCase() || 'ALERT'}</h3>
-              <p class="text-sm mb-2"><strong>Severity:</strong> 
-                <span class="px-2 py-1 rounded text-xs font-bold ${alertColor} text-white">
-                  ${alert.severity}
-                </span>
-              </p>
-              <p class="text-sm mb-2">${alert.description || 'No description available'}</p>
-              <p class="text-xs text-gray-600">
-                <strong>Triggered:</strong> ${alert.triggered_by || 'Unknown'}<br/>
-                <strong>Time:</strong> ${new Date(alert.timestamp).toLocaleString()}
-              </p>
-            </div>
-          `);
-
-        markersRef.current.push(alertMarker);
-
-        // Add risk zone overlay for high/critical alerts
-        if (alert.severity === 'high' || alert.severity === 'critical') {
-          const riskZone = L.circle([lat, lon], {
-            color: alert.severity === 'critical' ? '#dc2626' : '#ea580c',
-            fillColor: alert.severity === 'critical' ? '#dc2626' : '#ea580c',
-            fillOpacity: 0.2,
-            radius: 5000 // 5km radius
-          }).addTo(map);
-
-          markersRef.current.push(riskZone);
-        }
+          </div>
+        `);
       });
     }
 
